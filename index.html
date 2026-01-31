@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="light-mode"> 
+    <button id="theme-toggle" class="theme-toggle">🌙</button>
+    <!-- akan muncul jika login/register berhasil -->
+    <div class="popupLog"></div>
+    <div class="popupReg"></div>
+    <!-- akan muncul jika login/register error -->
+    <div class="errPopupLog"></div>
+    <div class="errPopupReg"></div>
+
+    <div class="container-login"> <div class="content">
+            <div class="judul">
+                <h1>Form Login</h1>
+            </div>
+            <form action="" class="formLogin">
+                <label for="email">Masukkan email</label>
+                <input type="email" name="email" id="email" placeholder="masukkan email">
+                <div id="errEmailLog" class="error-message"><p>Belum di isi</p></div>
+                <label for="password">Masukkan password</label>
+                <input type="password" name="password" id="password" placeholder="masukkan password">
+                <div id="errPassLog" class="error-message"><p>Belum di isi</p></div>
+                <button type="submit">Login</button>
+            </form>
+            <a href="#" id="showRegister">Register</a> </div>
+    </div>
+    
+    <div class="container-regis hidden"> <div class="content">
+            <div class="judul">
+                <h1>Form Register</h1>
+            </div>
+            <form action="" class="formRegis">
+                <label for="name">Masukkan nama</label>
+                <input type="text" name="name" id="name" placeholder="masukkan nama"> <div id="errNama" class="error-message"><p>Belum di isi</p></div>
+
+                <label for="dob">Tanggal lahir</label>
+                <input type="date" name="dob" id="dob"> <label for="emailNew">Masukkan email</label>
+                <div id="errDate" class="error-message"><p>Belum di isi</p></div>
+                <input type="email" name="emailNew" id="emailNew" placeholder="masukkan email">
+                <div id="errEmailReg" class="error-message"><p>Belum di isi</p></div>
+                
+                <label for="passwordNew">Masukkan password</label>
+                <input type="password" name="passwordNew" id="passwordNew" placeholder="masukkan password">
+                <div id="errPassReg" class="error-message"><p>Belum di isi</p></div>
+                
+                <label for="confirmPasswordNew">Konfirmasi password</label>
+                <input type="password" name="confirmPasswordNew" id="confirmPasswordNew" placeholder="masukkan password"> <div id="errPassRegKonf" class="error-message"><p>Belum di isi</p></div>
+
+                <button type="submit">Submit</button>
+            </form>
+            <a href="#" id="showLogin">Login</a> </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
