@@ -1,9 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Login & Register</title>
+    <style>
+        .popup-item {
+            background: #4CAF50;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
+            font-weight: 600;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .popup-item.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .popup-err {
+            background: #ff2020;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
+            font-weight: 600;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .popup-err.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 8px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 0.5rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, .3);
+        }
+
+        .input-field.error {
+            border: 2px solid #ef4444;
+            /* 2px merah */
+        }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Konfigurasi Tailwind untuk Dark Mode
@@ -12,66 +67,83 @@
         }
     </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300 min-h-screen flex items-center justify-center p-6">
 
-    <button id="toggle" class="fixed top-6 right-6 bg-blue-600 dark:bg-yellow-500 text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+<body
+    class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300 min-h-screen flex items-center justify-center p-6">
+    <!-- Popup -->
+    <div id="popup" class="fixed top-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+    <div id="errPopup" class="fixed top-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+
+    <button id="toggle"
+        class="fixed top-6 right-6 bg-blue-600 dark:bg-yellow-500 text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
         <span class="dark:hidden">🌙</span>
         <span class="hidden dark:inline">☀️</span>
     </button>
 
+    <!-- Login -->
     <div class="w-full max-w-md">
         <div id="loginBox" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition-all duration-300">
             <h2 class="text-2xl font-bold text-center text-blue-600 dark:text-blue-400 mb-6">Login Akun</h2>
             <form id="formLog" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-                    <input type="email" id="emailLog" placeholder="nama@email.com" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <input type="email" id="emailLog" placeholder="nama@email.com" class="input-field">
                     <p id="errEmailLog" class="hidden text-red-500 text-xs mt-1 font-medium">Email wajib diisi</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                    <input type="password" id="passwordLog" placeholder="••••••••" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <input type="password" id="passwordLog" placeholder="••••••••" class="input-field">
                     <p id="errPassLog" class="hidden text-red-500 text-xs mt-1 font-medium">Password wajib diisi</p>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md transition-colors">Submit</button>
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md transition-colors">Submit</button>
             </form>
             <p class="text-center mt-6 dark:text-gray-400">
-                Belum punya akun? <a href="#" id="switchToRegister" class="text-blue-600 dark:text-blue-400 font-medium hover:underline">Daftar</a>
+                Belum punya akun? <a href="#" id="switchToRegister"
+                    class="text-blue-600 dark:text-blue-400 font-medium hover:underline">Daftar</a>
             </p>
         </div>
 
-        <div id="registerBox" class="hidden bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition-all duration-300">
+        <!-- Register -->
+        <div id="registerBox"
+            class="hidden bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition-all duration-300">
             <h2 class="text-2xl font-bold text-center text-blue-600 dark:text-blue-400 mb-6">Daftar Akun</h2>
             <form id="formReg" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Lengkap</label>
-                    <input type="text" id="namaReg" placeholder="Masukkan nama" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <input type="text" id="namaReg" placeholder="Masukkan nama" class="input-field">
                     <p id="errNamaReg" class="hidden text-red-500 text-xs mt-1 font-medium">Nama wajib diisi</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-                    <input type="email" id="emailReg" placeholder="nama@email.com" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <input type="email" id="emailReg" placeholder="nama@email.com" class="input-field">
                     <p id="errEmailReg" class="hidden text-red-500 text-xs mt-1 font-medium">Email tidak valid</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                        <input type="password" id="passwordReg" placeholder="••••••••" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="password" id="passwordReg" placeholder="••••••••" class="input-field">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Konfirmasi</label>
-                        <input type="password" id="passwordRegKonf" placeholder="••••••••" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Konfirmasi</label>
+                        <input type="password" id="passwordRegKonf" placeholder="••••••••"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     </div>
                 </div>
                 <p id="errPassReg" class="hidden text-red-500 text-xs mt-1 font-medium">Password tidak cocok</p>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md transition-colors">Daftar Sekarang</button>
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md transition-colors">Daftar
+                    Sekarang</button>
             </form>
             <p class="text-center mt-6 dark:text-gray-400">
-                Sudah punya akun? <a href="#" id="switchToLogin" class="text-blue-600 dark:text-blue-400 font-medium hover:underline">Login</a>
+                Sudah punya akun? <a href="#" id="switchToLogin"
+                    class="text-blue-600 dark:text-blue-400 font-medium hover:underline">Login</a>
             </p>
         </div>
     </div>
 
     <script src="app.js"></script>
 </body>
+
 </html>
