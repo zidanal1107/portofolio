@@ -88,12 +88,10 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                     <input type="email" id="emailLog" placeholder="nama@email.com" class="input-field">
-                    <p id="errEmailLog" class="hidden text-red-500 text-xs mt-1 font-medium">Email wajib diisi</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
                     <input type="password" id="passwordLog" placeholder="••••••••" class="input-field">
-                    <p id="errPassLog" class="hidden text-red-500 text-xs mt-1 font-medium">Password wajib diisi</p>
                 </div>
                 <button type="submit"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md transition-colors">Submit</button>
@@ -112,25 +110,21 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Lengkap</label>
                     <input type="text" id="namaReg" placeholder="Masukkan nama" class="input-field">
-                    <p id="errNamaReg" class="hidden text-red-500 text-xs mt-1 font-medium">Nama wajib diisi</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                     <input type="email" id="emailReg" placeholder="nama@email.com" class="input-field">
-                    <p id="errEmailReg" class="hidden text-red-500 text-xs mt-1 font-medium">Email tidak valid</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
                         <input type="password" id="passwordReg" placeholder="••••••••" class="input-field">
-                        <p id="errPassReg" class="hidden text-red-500 text-xs mt-1 font-medium">Password masih kosong
                         </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Konfirmasi
                             password</label>
                         <input type="password" id="passwordRegKonf" placeholder="••••••••" class="input-field">
-                        <p id="errPassRegK" class="hidden text-red-500 text-xs mt-1 font-medium">Password tidak cocok
                         </p>
                     </div>
                 </div>
@@ -146,18 +140,22 @@
     </div>
 
     <!-- Dashboard (SETELAH LOGIN) -->
-    <div id="dashboardBox" class="hidden min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+    <div id="dashboardBox"
+        class="hidden bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition-all duration-300 text-center">
 
-        <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl w-full max-w-xl text-center">
-            <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
-            <p class="mb-6">Selamat datang 👋</p>
-            <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
-                Logout
-            </button>
-        </div>
+        <h2 class="text-2xl font-bold text-green-600 dark:text-green-400 mb-4">
+            Selamat datang 👋
+        </h2>
 
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+            Kamu sudah login
+        </p>
+
+        <button id="logoutBtn"
+            class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg shadow-md transition-colors">
+            Logout
+        </button>
     </div>
-
 
     <script src="app.js"></script>
 </body>
