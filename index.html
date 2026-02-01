@@ -146,22 +146,18 @@
     </div>
 
     <!-- Dashboard (SETELAH LOGIN) -->
-    <div id="dashboardBox"
-        class="hidden bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl transition-all duration-300 text-center">
+    <div id="dashboardBox" class="hidden min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
 
-        <h2 class="text-2xl font-bold text-green-600 dark:text-green-400 mb-4">
-            Selamat datang 👋
-        </h2>
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl w-full max-w-xl text-center">
+            <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
+            <p class="mb-6">Selamat datang 👋</p>
+            <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                Logout
+            </button>
+        </div>
 
-        <p class="text-gray-600 dark:text-gray-300 mb-6">
-            Kamu sudah login
-        </p>
-
-        <button id="logoutBtn"
-            class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg shadow-md transition-colors">
-            Logout
-        </button>
     </div>
+
 
     <script src="app.js"></script>
 </body>
