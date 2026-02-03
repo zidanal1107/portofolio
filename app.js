@@ -84,7 +84,7 @@ formLog.addEventListener("submit", async e => {
     }
 
     try {
-        const res = await fetch(`${API}/login`, {
+        const res = await fetch("https://portofolio-production-db1e.up.railway.app/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
@@ -140,7 +140,7 @@ formReg.addEventListener("submit", async e => {
     }
 
     try {
-        const res = await fetch(`${API}/register`, {
+        const res = await fetch(`https://portofolio-production-db1e.up.railway.app/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nama, email, password })
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!token) return;
 
     try {
-        const res = await fetch(`${API}/auth`, {
+        const res = await fetch(`https://portofolio-production-db1e.up.railway.app/auth`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token })
@@ -200,7 +200,7 @@ const logout = async () => {
     if (!token) return;
 
     try {
-        await fetch(`${API}/logout`, {
+        await fetch(`https://portofolio-production-db1e.up.railway.app/logout`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token })
