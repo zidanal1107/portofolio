@@ -10,6 +10,8 @@ const switchLog = document.getElementById("switchToLogin");
 const toggleBtn = document.getElementById("toggle");
 const logoutBtn = document.getElementById("logoutBtn");
 
+const API = "http://localhost:3000";
+
 /*************************
  * UI TOGGLE
  *************************/
@@ -30,7 +32,7 @@ toggleBtn.onclick = () => {
 };
 
 /*************************
- * POPUP
+ * POPUP SYSTEM
  *************************/
 const popup = document.getElementById("popup");
 const errPopup = document.getElementById("errPopup");
@@ -62,95 +64,15 @@ const showErr = msg => {
 };
 
 /*************************
- * STORAGE LAYER
- *************************/
-const getUsers = () => JSON.parse(localStorage.getItem("users")) || [];
-const saveUsers = users =>
-    localStorage.setItem("users", JSON.stringify(users));
-
-const getSessions = () =>
-    JSON.parse(localStorage.getItem("sessions")) || [];
-const saveSessions = sessions =>
-    localStorage.setItem("sessions", JSON.stringify(sessions));
-
-/*************************
- * SECURITY (SIMULATION)
- *************************/
-const hashPassword = password => btoa(password);
-
-/*************************
- * SESSION LOGIC
- *************************/
-const createSession = userId => {
-    const sessions = getSessions();
-    const token = crypto.randomUUID();
-
-    sessions.push({
-        token,
-        userId,
-        expiredAt: Date.now() + 1000 * 60 * 60 // 1 jam
-    });
-
-    saveSessions(sessions);
-    localStorage.setItem("auth_token", token);
-    return token;
-};
-
-const clearExpiredSessions = () => {
-    const now = Date.now();
-    const valid = getSessions().filter(s => s.expiredAt > now);
-    saveSessions(valid);
-};
-
-const authenticate = () => {
-    clearExpiredSessions();
-
-    const token = localStorage.getItem("auth_token");
-    if (!token) return null;
-
-    const session = getSessions().find(s => s.token === token);
-    if (!session) return null;
-
-    return getUsers().find(u => u.id === session.userId) || null;
-};
-
-const logout = () => {
-    const token = localStorage.getItem("auth_token");
-    if (!token) return;
-
-    const sessions = getSessions().filter(s => s.token !== token);
-    saveSessions(sessions);
-    localStorage.removeItem("auth_token");
-
-    dashboardBox.classList.add("hidden");
-    loginBox.classList.remove("hidden");
-    showPopup("Logout berhasil");
-};
-
-/*************************
  * LOGIN
  *************************/
 const formLog = document.getElementById("formLog");
 const emailLog = document.getElementById("emailLog");
 const passwordLog = document.getElementById("passwordLog");
 
-const resetLoginForm = () => {
-    formLog.reset();
-    resetErrMassageL();
-};
+const resetLoginForm = () => formLog.reset();
 
-const cekLogin = (email, password) => {
-    const user = getUsers().find(u => u.email === email);
-    if (!user) return { ok: false, msg: "Email belum terdaftar" };
-
-    if (user.password !== hashPassword(password))
-        return { ok: false, msg: "Password salah" };
-
-    createSession(user.id);
-    return { ok: true };
-};
-
-formLog.addEventListener("submit", e => {
+formLog.addEventListener("submit", async e => {
     e.preventDefault();
 
     const email = emailLog.value.trim();
@@ -161,16 +83,31 @@ formLog.addEventListener("submit", e => {
         return;
     }
 
-    const res = cekLogin(email, password);
-    if (!res.ok) {
-        showErr(res.msg);
-        return;
-    }
+    try {
+        const res = await fetch(`${API}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
 
-    showPopup("Login berhasil");
-    loginBox.classList.add("hidden");
-    dashboardBox.classList.remove("hidden");
-    resetLoginForm();
+        const data = await res.json();
+
+        if (!data.ok) {
+            showErr(data.msg);
+            return;
+        }
+
+        localStorage.setItem("auth_token", data.token);
+
+        loginBox.classList.add("hidden");
+        dashboardBox.classList.remove("hidden");
+
+        showPopup("Login berhasil");
+        resetLoginForm();
+
+    } catch {
+        showErr("Server tidak tersedia");
+    }
 });
 
 /*************************
@@ -182,12 +119,9 @@ const emailReg = document.getElementById("emailReg");
 const passwordReg = document.getElementById("passwordReg");
 const passwordRegKonf = document.getElementById("passwordRegKonf");
 
-const resetRegisterForm = () => {
-    formReg.reset();
-    resetErrMassageR();
-};
+const resetRegisterForm = () => formReg.reset();
 
-formReg.addEventListener("submit", e => {
+formReg.addEventListener("submit", async e => {
     e.preventDefault();
 
     const nama = namaReg.value.trim();
@@ -205,38 +139,80 @@ formReg.addEventListener("submit", e => {
         return;
     }
 
-    const users = getUsers();
-    if (users.find(u => u.email === email)) {
-        showErr("Email sudah terdaftar");
-        return;
+    try {
+        const res = await fetch(`${API}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nama, email, password })
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+            showErr(data.msg);
+            return;
+        }
+
+        showPopup("Registrasi berhasil");
+        resetRegisterForm();
+        switchLog.click();
+
+    } catch {
+        showErr("Server tidak tersedia");
     }
-
-    users.push({
-        id: crypto.randomUUID(),
-        nama,
-        email,
-        password: hashPassword(password)
-    });
-
-    saveUsers(users);
-    showPopup("Registrasi berhasil");
-    switchLog.click();
-    resetRegisterForm();
 });
 
 /*************************
- * AUTO AUTH ON LOAD
+ * AUTH CHECK ON LOAD
  *************************/
-document.addEventListener("DOMContentLoaded", () => {
-    const user = authenticate();
-    if (user) {
+document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) return;
+
+    try {
+        const res = await fetch(`${API}/auth`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token })
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+            localStorage.removeItem("auth_token");
+            return;
+        }
+
         loginBox.classList.add("hidden");
         registerBox.classList.add("hidden");
         dashboardBox.classList.remove("hidden");
+
+    } catch {
+        localStorage.removeItem("auth_token");
     }
 });
 
 /*************************
  * LOGOUT
  *************************/
+const logout = async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) return;
+
+    try {
+        await fetch(`${API}/logout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token })
+        });
+    } catch {}
+
+    localStorage.removeItem("auth_token");
+
+    dashboardBox.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+
+    showPopup("Logout berhasil");
+};
+
 logoutBtn?.addEventListener("click", logout);
