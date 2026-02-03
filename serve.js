@@ -23,6 +23,10 @@ db.connect(err => {
     console.log("MySQL Connected");
 });
 
+app.get("/", (req, res) => {
+    res.send("Backend is running!");
+});
+
 /*************************
  * REGISTER
  *************************/
